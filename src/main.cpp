@@ -14,6 +14,7 @@ int main()
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
+        DrawFPS(10, 10);
         DrawText("Hello raylib!\nBuilt on windows and linux using cmake!", 50, 200, 32, BLACK);
 
         EndDrawing();
