@@ -1,7 +1,7 @@
 #include "raylib.h"
 
-constexpr int SCREEN_WIDTH  = 640;
-constexpr int SCREEN_HEIGHT = 480;
+constexpr int SCREEN_WIDTH  = 1280;
+constexpr int SCREEN_HEIGHT = 720;
 
 int main()
 {
@@ -14,7 +14,7 @@ int main()
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
-        DrawText("hello raylib w/ cmake!\n", 200, 200, 18, BLACK);
+        DrawText("Hello raylib!\nBuilt on windows and linux using cmake!", 50, 200, 32, BLACK);
 
         EndDrawing();
     }
