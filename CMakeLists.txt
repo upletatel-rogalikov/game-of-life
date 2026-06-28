@@ -9,8 +9,10 @@ set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(libs/raylib)
 
-add_executable(gof src/main.cpp)
-target_link_libraries(gof PRIVATE raylib)
+add_executable(game_of_life src/main.cpp src/grid.cpp src/graphics.cpp)
+
+target_include_directories(game_of_life PRIVATE src/include)
+target_link_libraries(game_of_life PRIVATE raylib)
 
 # unused
 
