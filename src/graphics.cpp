@@ -13,21 +13,21 @@ void DrawGrid(const Grid& gr, int origin_x, int origin_y) {
     // borders
 
     //top hor
-    DrawLineEx( Vector2{origin_x, origin_y - 5},
-                Vector2{origin_x + 1 + (gr.width() * cell_size), origin_y - 5},
+    DrawLineEx( Vector2{(float) origin_x, (float) origin_y - 5},
+                Vector2{(float) origin_x + 1 + (gr.width() * cell_size), (float) origin_y - 5},
                 10.0f, BLACK);
     //bottom hor
-    DrawLineEx( Vector2{origin_x, origin_y + 5 + (gr.height() * cell_size)},
-                Vector2{origin_x + 1 + (gr.width() * cell_size), origin_y + 5 + (gr.height() * cell_size)},
+    DrawLineEx( Vector2{(float) origin_x, (float) origin_y + 5 + (gr.height() * cell_size)},
+                Vector2{(float) origin_x + 1 + (gr.width() * cell_size), (float) origin_y + 5 + (gr.height() * cell_size)},
                 10.0f, BLACK);
     //left vert
-    DrawLineEx( Vector2{origin_x - 5, origin_y - 10},
-                Vector2{origin_x - 5, origin_y + 10 + (gr.height() * cell_size)},
+    DrawLineEx( Vector2{(float) origin_x - 5, (float) origin_y - 10},
+                Vector2{(float) origin_x - 5, (float) origin_y + 10 + (gr.height() * cell_size)},
                 10.0f, BLACK);
 
     //right vert
-    DrawLineEx( Vector2{origin_x + 5 + (gr.width() * cell_size), origin_y - 10},
-                Vector2{origin_x + 5 + (gr.width() * cell_size), origin_y + 10 + (gr.height() * cell_size)},
+    DrawLineEx( Vector2{(float) origin_x + 5 + (gr.width() * cell_size), (float) origin_y - 10},
+                Vector2{(float) origin_x + 5 + (gr.width() * cell_size), (float) origin_y + 10 + (gr.height() * cell_size)},
                 10.0f, BLACK);
 
     // insides
