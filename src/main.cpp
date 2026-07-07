@@ -14,32 +14,62 @@ int main()
     SetWindowMinSize(640, 480);
     SetTargetFPS(60);
 
-    Grid my_grid(15, 10);
+    Grid my_grid(200, 200, 100, 50);
 
-    my_grid.set_alive(0, 0);
+    int sim_speed = 24;
+    bool auto_sim = false;
+    float time_counter = 0.0f;
+
+    my_grid.set_alive(4, 1);
+    my_grid.set_alive(5, 2);
     my_grid.set_alive(3, 3);
     my_grid.set_alive(4, 3);
-    my_grid.set_alive(6, 6);
-    my_grid.set_alive(14, 6);
-    my_grid.set_alive(14, 7);
-    my_grid.set_alive(14, 8);
-    my_grid.set_alive(14, 9);
-    my_grid.set_alive(13, 9);
-    my_grid.set_alive(12, 9);
-    my_grid.set_alive(9, 9);
+    my_grid.set_alive(5, 3);
 
+    // std::cout << "neighbors: " << my_grid.count_neighbors(my_grid.get_index(4, 2)) << "\n";
 
-    for (int i = 0; i < my_grid.size(); ++i) {
-        std::cout << "cell #" << i << " value: " << my_grid.get_status(my_grid.get_x(i), my_grid.get_y(i)) << "\n";
-    }
-
+    // for (int i = 0; i < my_grid.size(); ++i) {
+    //     std::cout << "cell #" << i << " value: " << my_grid.get_status(my_grid.get_x(i), my_grid.get_y(i)) << "\n";
+    // }
 
     while (!WindowShouldClose())
     {
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
-        // DrawText("Hello raylib!\nBuilt on windows and linux using cmake!", 50, 200, 32, BLACK);
+
+        int current_ind = GetGridIndexFromPoint(my_grid, GetMouseX() - 5, GetMouseY() - 5);
+
+        if (auto_sim) {
+            time_counter += GetFrameTime();
+            if (time_counter * sim_speed >= 1.0f) {
+                time_counter = 0.0f;
+                my_grid.update();
+            }
+        }
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+
+            if (current_ind>= 0) {
+                my_grid.set_alive(my_grid.get_x(current_ind), my_grid.get_y(current_ind));
+            }
+        }
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+
+            if (current_ind >= 0) {
+                my_grid.set_dead(my_grid.get_x(current_ind), my_grid.get_y(current_ind));
+            }
+        }
+
+        // update grid
+        if (IsKeyPressed(KEY_R)) {
+            my_grid.update();
+        }
+
+        if (IsKeyPressed(KEY_U)) {
+            auto_sim = !auto_sim;
+        }
 
         // debug information
         DrawFPS(10, 10);
@@ -47,7 +77,8 @@ int main()
         DrawPixel(GetMouseX() - 5, GetMouseY() - 5, RED);
         //
 
-        DrawGrid(my_grid, 200, 200);
+        DrawGrid(my_grid);
+        DrawCellSelection(my_grid, current_ind);
 
         EndDrawing();
     }
