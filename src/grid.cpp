@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <iostream>
+#include <utility>
 
 Grid::Grid() :orgn_x{100}, orgn_y{100}, size_x{10}, size_y{10} {
     cellv = std::vector<int>(size_x * size_y, 0);
@@ -142,4 +143,32 @@ void Grid::update() {
     return;
 }
 
+void Grid::resize(int new_width, int new_height) {
+    if (new_width < 1 || new_height < 1) {
+        return;
+    }
+    int old_width = this->width();
+    int old_height = this->height();
 
+    int min_width = new_width >= old_width ? old_width : new_width;
+    int min_height = new_height >= old_height ? old_height : new_height;
+
+    std::vector<int> new_cellv = std::vector<int>(new_width * new_height, 0);
+    // std::cout << "success 1\n";
+
+    for (int i = 0; i < min_width; ++i) {
+        for (int j = 0; j < min_height; ++j) {
+            new_cellv[i + j * new_width] = cellv[i + j * old_width];
+        }
+    }
+
+    // std::cout << "success 2\n";
+
+    size_x = new_width;
+    size_y = new_height;
+    cellv = std::move(new_cellv);
+    tempv = std::vector<int>(new_width * new_height, 0);
+
+    // std::cout << "success 3\n";
+    return;
+}

@@ -40,7 +40,7 @@ int GetGridIndexFromPoint(const Grid& gr, int screen_x, int screen_y) {
 void DrawCellSelection(const Grid& gr, int index) {
     if (index < 0)
         return;
-    DrawRectangleLinesEx( (Rectangle) {(float) gr.origin_x() + GetCellSize(gr) * gr.get_x(index),
+    DrawRectangleLinesEx(Rectangle{(float) gr.origin_x() + GetCellSize(gr) * gr.get_x(index),
                                   (float) gr.origin_y() + GetCellSize(gr) * gr.get_y(index),
                                   (float) GetCellSize(gr), (float) GetCellSize(gr)}, (float) GetCellSize(gr) / 8, BLUE);
     return;

@@ -24,6 +24,7 @@ public:
     void set_dead(int x, int y);
     
     int count_neighbors(int index);
+    void resize(int new_width, int new_height);
     void update();
 
 private:
