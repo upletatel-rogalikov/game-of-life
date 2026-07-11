@@ -2,13 +2,9 @@
 #include "grid.h"
 #include "graphics.h"
 
-//int cell_size = 30;
-
-// add bool to turn borders inside the frame on/off
-
 int GetCellSize(const Grid& gr) {
-    int result_x = (GetRenderWidth() - 2 * gr.origin_x()) / gr.width();
-    int result_y = (GetRenderHeight() - 2 * gr.origin_y()) / gr.height();
+    int result_x = (GetRenderWidth() -  gr.origin_x() * 3 / 2 - 20) / gr.width();
+    int result_y = (GetRenderHeight() -  gr.origin_y() * 3 / 2 - 20) / gr.height();
 
     if (result_x < 1 || result_y < 1)
         return 1;
@@ -38,16 +34,16 @@ int GetGridIndexFromPoint(const Grid& gr, int screen_x, int screen_y) {
 }
 
 void DrawCellSelection(const Grid& gr, int index) {
-    if (index < 0)
+    if (index < 0) {
         return;
+    }
     DrawRectangleLinesEx(Rectangle{(float) gr.origin_x() + GetCellSize(gr) * gr.get_x(index),
                                   (float) gr.origin_y() + GetCellSize(gr) * gr.get_y(index),
-                                  (float) GetCellSize(gr), (float) GetCellSize(gr)}, (float) GetCellSize(gr) / 8, BLUE);
+                                  (float) GetCellSize(gr), (float) GetCellSize(gr)}, (float) GetCellSize(gr) / 6, BLUE);
     return;
 }
 
 void DrawGrid(const Grid& gr) { 
-
     const int cell_size = GetCellSize(gr);
 
     // borders
@@ -73,14 +69,48 @@ void DrawGrid(const Grid& gr) {
     // insides
     for (int i = 0; i < gr.size(); ++i) {
         if (gr.get_status(gr.get_x(i), gr.get_y(i))) {
-
             DrawRectangle(  gr.origin_x() + gr.get_x(i) * cell_size,
                             gr.origin_y() + gr.get_y(i) * cell_size,
                             cell_size, cell_size, BLACK);  
+        }
+        else {
+            DrawRectangle(  gr.origin_x() + gr.get_x(i) * cell_size,
+                            gr.origin_y() + gr.get_y(i) * cell_size,
+                            cell_size, cell_size, WHITE);  
         }
     }
     return;
 }
 
+// remove args
+void DrawHelpMenu(const Grid& gr) {
 
+    // placeholder text layout
+    int font_sz = GetRenderWidth() / 4 / 16;
 
+    DrawRectangle(  (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 50,
+                    gr.origin_y() + font_sz,
+                    MeasureText("LMB - Populate the selected cell", font_sz) + 50,
+                    font_sz * 18, PINK);
+
+    DrawText(TextFormat("LMB - Populate the selected cell\n\n"
+                        "RMB - Clear the selected cell\n\n"
+                        "R - Update the grid once\n\n"
+                        "C - Clear the grid\n\n"
+                        "U - Toggle auto-update\n\n"
+                        ">/< - +/- Auto-update speed\n\n"
+                        "Arrow keys - Resize the grid"),
+                        (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 25,
+                        gr.origin_y() + font_sz * 3,
+                        font_sz, BLACK);
+
+    // DrawText(TextFormat("\"LMB\" - Populate the selected cell"), 500, 440, font_sz, BLACK);
+    // DrawText(TextFormat("\"RMB\" - Clear the selected cell"), 500, 470, font_sz, BLACK);
+    // DrawText(TextFormat("\"R\" - Update the grid once"), 500, 500, font_sz, BLACK);
+    // DrawText(TextFormat("\"C\" - Clear the grid"), 500, 530, font_sz, BLACK);
+    // DrawText(TextFormat("\"U\" - Toggle auto-update"), 500, 560, font_sz, BLACK);
+    // DrawText(TextFormat("\",\"(comma)/\".\"(period) - +/- Auto-update speed"), 500, 590, font_sz, BLACK);
+    // DrawText(TextFormat("\"Arrow keys\" - Resize the grid"), 500, 620, font_sz, BLACK);
+
+    return;
+}

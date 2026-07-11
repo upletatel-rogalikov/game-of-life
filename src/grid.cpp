@@ -55,7 +55,6 @@ int Grid::get_index(int x, int y) const {
 
     x %= size_x;
     y %= size_y;
-
     return x + y * size_x;
 }
 
@@ -90,10 +89,7 @@ int Grid::count_neighbors(int index) {
             if (i == 0 && j == 0) {
                 continue;
             }
-
             // std::cout << "x: " << x << ", y: " << y << "\n";
-
-
             if (cellv[get_index(x, y)] == 1) {
                 result++;
             }
@@ -112,14 +108,12 @@ int Grid::count_neighbors(int index) {
     // if (cellv[(this->get_x(index) + 1 + size_x) % size_x + (this->get_y(index) + 1 + size_y) % size_y * size_x]) {
     //     result++;
     // }
-
     return result;
 }
 
 void Grid::update() {
     for (int i = 0; i < this->size(); ++i) {
        int neighbors = this->count_neighbors(i);
-
        // std::cout << "cell #" << i << " -> " << neighbors << " neighbors\n";
 
        if (neighbors < 2) {
@@ -147,6 +141,7 @@ void Grid::resize(int new_width, int new_height) {
     if (new_width < 1 || new_height < 1) {
         return;
     }
+
     int old_width = this->width();
     int old_height = this->height();
 
@@ -154,7 +149,6 @@ void Grid::resize(int new_width, int new_height) {
     int min_height = new_height >= old_height ? old_height : new_height;
 
     std::vector<int> new_cellv = std::vector<int>(new_width * new_height, 0);
-    // std::cout << "success 1\n";
 
     for (int i = 0; i < min_width; ++i) {
         for (int j = 0; j < min_height; ++j) {
@@ -162,13 +156,9 @@ void Grid::resize(int new_width, int new_height) {
         }
     }
 
-    // std::cout << "success 2\n";
-
     size_x = new_width;
     size_y = new_height;
     cellv = std::move(new_cellv);
     tempv = std::vector<int>(new_width * new_height, 0);
-
-    // std::cout << "success 3\n";
     return;
 }

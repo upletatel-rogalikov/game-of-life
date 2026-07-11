@@ -9,4 +9,6 @@ int GetGridIndexFromPoint(const Grid& gr, int screen_x, int screen_y);
 
 void DrawCellSelection(const Grid& gr, int index);
 
+void DrawHelpMenu(const Grid& gr);
+
 #endif
