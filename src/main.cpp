@@ -113,7 +113,7 @@ int main()
         // debug information
         DrawRectangle(5, 5, GetRenderWidth() - 10, 30, WHITE);
         DrawFPS(10, 10);
-        DrawText(TextFormat("X: %4d Y: %4d", GetMouseX() - 5, GetMouseY() - 5), 100, 10, 21, DARKGREEN);
+        DrawText(TextFormat("X: %4d Y: %4d", GetMouseX() - 5, GetMouseY() - 5), 100, 10, 21, GREEN);
         DrawText(TextFormat("speed: %2d", sim_speed), 290, 10, 21, DARKGREEN);
         DrawText(TextFormat("cell #%4d neighbors: %d", current_ind, my_grid.count_neighbors(current_ind)), 420, 10, 21, DARKGREEN);
         DrawText(TextFormat("size: %dx%d", my_grid.width(), my_grid.height()), 780, 10, 21, DARKGREEN);
