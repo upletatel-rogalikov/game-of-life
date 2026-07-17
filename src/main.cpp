@@ -27,8 +27,9 @@ int main()
 
         ClearBackground(LIGHTGRAY);
 
-        int current_ind = GetGridIndexFromPoint(my_grid, GetMouseX() - 5, GetMouseY() - 5);
         int current_key = GetKeyPressed();
+
+        // int current_ind = GetGridIndexFromPoint(my_grid, GetMouseX() - 5, GetMouseY() - 5);
 
         switch (current_key) {
             case KEY_R: // update once
@@ -88,6 +89,8 @@ int main()
             }
         }
 
+        int current_ind = GetGridIndexFromPoint(my_grid, GetMouseX() - 5, GetMouseY() - 5);
+
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             if (current_ind >= 0) {
                 my_grid.set_alive(my_grid.get_x(current_ind), my_grid.get_y(current_ind));
@@ -113,7 +116,7 @@ int main()
         DrawText(TextFormat("X: %4d Y: %4d", GetMouseX() - 5, GetMouseY() - 5), 100, 10, 21, DARKGREEN);
         DrawText(TextFormat("speed: %2d", sim_speed), 290, 10, 21, DARKGREEN);
         DrawText(TextFormat("cell #%4d neighbors: %d", current_ind, my_grid.count_neighbors(current_ind)), 420, 10, 21, DARKGREEN);
-        DrawText(TextFormat("size: %dx%d", my_grid.width(), my_grid.height()), 680, 10, 21, DARKGREEN);
+        DrawText(TextFormat("size: %dx%d", my_grid.width(), my_grid.height()), 780, 10, 21, DARKGREEN);
         DrawPixel(GetMouseX() - 5, GetMouseY() - 5, RED);
         DrawPixel(GetMouseX() - 4, GetMouseY() - 5, RED);
         DrawPixel(GetMouseX() - 5, GetMouseY() - 4, RED);
