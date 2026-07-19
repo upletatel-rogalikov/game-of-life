@@ -91,14 +91,14 @@ void DrawHelpMenu(const Grid& gr) {
     DrawRectangle(  (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 50,
                     gr.origin_y() + font_sz,
                     MeasureText("LMB - Populate the selected cell", font_sz) + 50,
-                    font_sz * 18,
+                    font_sz * 21,
                     WHITE);
 
     DrawRectangleLinesEx(Rectangle {
                                     (float) (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 50,
                                     (float) gr.origin_y() + font_sz,
                                     (float) MeasureText("LMB - Populate the selected cell", font_sz) + 50,
-                                    (float) font_sz * 18},
+                                    (float) font_sz * 21},
                         (float) font_sz / 8, BLACK);
 
     DrawText(TextFormat("LMB - Populate the selected cell\n\n"
@@ -107,7 +107,8 @@ void DrawHelpMenu(const Grid& gr) {
                         "C - Clear the grid\n\n"
                         "U - Toggle auto-update\n\n"
                         ">/< - +/- Auto-update speed\n\n"
-                        "Arrow keys - Resize the grid"),
+                        "Arrow keys - Resize the grid\n\n"
+                        "S/L - save/load grid (level.dat)"),
                         (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 25,
                         gr.origin_y() + font_sz * 3,
                         font_sz, BLACK);

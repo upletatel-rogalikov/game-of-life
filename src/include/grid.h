@@ -2,6 +2,7 @@
 #define GRID_H
 
 #include <vector>
+#include <string>
 
 class Grid {
 
@@ -26,6 +27,9 @@ public:
     int count_neighbors(int index);
     void resize(int new_width, int new_height);
     void update();
+
+    void save(std::string filename);
+    void load(std::string filename);
 
 private:
     int orgn_x;

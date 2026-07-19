@@ -77,6 +77,14 @@ int main()
                 my_grid.resize(my_grid.width(), my_grid.height() - 1);
                 break;
 
+            case KEY_S: // save level
+                my_grid.save("level.dat");
+                break;
+
+            case KEY_L: // load level
+                my_grid.load("level.dat");
+                break;
+
             default:
                 break;
         }

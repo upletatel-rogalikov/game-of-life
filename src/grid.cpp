@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <utility>
+#include <string>
+#include <fstream>
 
 Grid::Grid() :orgn_x{100}, orgn_y{100}, size_x{10}, size_y{10} {
     cellv = std::vector<int>(size_x * size_y, 0);
@@ -160,5 +162,63 @@ void Grid::resize(int new_width, int new_height) {
     size_y = new_height;
     cellv = std::move(new_cellv);
     tempv = std::vector<int>(new_width * new_height, 0);
+    return;
+}
+
+void Grid::save(std::string filename) {
+    std::ofstream out_file(filename, std::ios::binary);
+
+    out_file.write(reinterpret_cast<char*>(&orgn_x), sizeof orgn_x);
+    out_file.write(reinterpret_cast<char*>(&orgn_y), sizeof orgn_y);
+    out_file.write(reinterpret_cast<char*>(&size_x), sizeof size_x);
+    out_file.write(reinterpret_cast<char*>(&size_y), sizeof size_y);
+    // out_file << this->orgn_x;
+    // out_file << this->orgn_y;
+    // out_file << this->size_x;
+    // out_file << this->size_y;
+
+    std::cout << "saving 1 step complete\n";
+    std::cout << "origin_x: " << this->orgn_x << "\n";
+    std::cout << "origin_y: " << this->orgn_y << "\n";
+    std::cout << "size_x: " << this->size_x << "\n";
+    std::cout << "size_y: " << this->size_y << "\n";
+
+    for (int i = 0; i < this->cellv.size(); ++i) {
+        out_file.write(reinterpret_cast<char*>(&cellv[i]), sizeof cellv[i]);
+        // out_file << this->cellv[i];
+    }
+    std::cout << "saving complete\n";
+
+    return;
+}
+
+void Grid::load(std::string filename) {
+    std::ifstream in_file(filename, std::ios::binary);
+
+    in_file.read(reinterpret_cast<char*>(&orgn_x), sizeof orgn_x);
+    in_file.read(reinterpret_cast<char*>(&orgn_y), sizeof orgn_y);
+    in_file.read(reinterpret_cast<char*>(&size_x), sizeof size_x);
+    in_file.read(reinterpret_cast<char*>(&size_y), sizeof size_y);
+    // in_file >> this->orgn_x;
+    // in_file >> this->orgn_y;
+    // in_file >> this->size_x;
+    // in_file >> this->size_y;
+
+    std::cout << "loading 1 step complete\n";
+    std::cout << "origin_x: " << this->orgn_x << "\n";
+    std::cout << "origin_y: " << this->orgn_y << "\n";
+    std::cout << "size_x: " << this->size_x << "\n";
+    std::cout << "size_y: " << this->size_y << "\n";
+
+    this->cellv = std::vector<int>(size_x * size_y, 0);
+    this->tempv = cellv;
+
+
+    for (int i = 0; i < this->cellv.size(); ++i) {
+        in_file.read(reinterpret_cast<char*>(&cellv[i]), sizeof cellv[i]);
+        // in_file >> this->cellv[i];
+    }
+    std::cout << "loading complete\n";
+
     return;
 }
