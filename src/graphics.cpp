@@ -3,8 +3,8 @@
 #include "graphics.h"
 
 int GetCellSize(const Grid& gr) {
-    int result_x = (GetRenderWidth() -  gr.origin_x() * 3 / 2 - 20) / gr.width();
-    int result_y = (GetRenderHeight() -  gr.origin_y() * 3 / 2 - 20) / gr.height();
+    int result_x = (GetRenderWidth() -  gr.origin_x() - 20) / gr.width();
+    int result_y = (GetRenderHeight() -  gr.origin_y() - 20) / gr.height();
 
     if (result_x < 1 || result_y < 1)
         return 1;
