@@ -181,9 +181,6 @@ int main()
         float button_height = GetRenderHeight() / 16 > 36 ? GetRenderHeight() / 16 : 36;
 
         GuiToggle(Rectangle{10.0f, 55.0f, 70.0f, button_height}, "#193#HELP", &show_help);
-        if (show_help) {
-            DrawHelpMenu(my_grid);
-        }
 
         if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 1.3f, 30.0f, button_height}, "#119#")) {
             if (!auto_sim) {
@@ -242,6 +239,13 @@ int main()
             my_grid.resize(my_grid.width(), my_grid.height() + resize_factor);
         }
 
+        DrawGrid(my_grid);
+        DrawCellSelection(my_grid, current_ind);
+
+        if (show_help) {
+            DrawHelpMenu(my_grid);
+        }
+
         if (file_save_dialog) {
             GuiUnlock();
             
@@ -287,8 +291,6 @@ int main()
                 }
         }
 
-        DrawGrid(my_grid);
-        DrawCellSelection(my_grid, current_ind);
 
         EndDrawing();
     }
