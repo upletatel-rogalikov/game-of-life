@@ -81,8 +81,6 @@ int Grid::count_neighbors(int index) {
     int c_x = this->get_x(index);
     int c_y = this->get_y(index);
 
-    // std::cout << "x: " << c_x << ", y: " << c_y << "\n";
-
     for (int i = -1; i < 2; ++i) {
         for (int j = -1; j < 2; ++j) {
             int x = c_x + i;
@@ -91,32 +89,18 @@ int Grid::count_neighbors(int index) {
             if (i == 0 && j == 0) {
                 continue;
             }
-            // std::cout << "x: " << x << ", y: " << y << "\n";
+
             if (cellv[get_index(x, y)] == 1) {
                 result++;
             }
         }
     }
-    // for (int i = -1; i < 2; ++i) {
-    //     for (int j = -1; j < 2; ++j) {
-    //         if (i == 0 && j == 0)
-    //             continue;
-    //         if (cellv[((this->get_x(index) + i + size_x) % size_x) + (((this->get_y(index) + j + size_y)) % size_y) * size_x]) {
-    //             ++result;
-    //         }
-    //     }
-    // }
-
-    // if (cellv[(this->get_x(index) + 1 + size_x) % size_x + (this->get_y(index) + 1 + size_y) % size_y * size_x]) {
-    //     result++;
-    // }
     return result;
 }
 
 void Grid::update() {
     for (int i = 0; i < this->size(); ++i) {
        int neighbors = this->count_neighbors(i);
-       // std::cout << "cell #" << i << " -> " << neighbors << " neighbors\n";
 
        if (neighbors < 2) {
             tempv[i] = 0;
@@ -146,6 +130,10 @@ void Grid::resize(int new_width, int new_height) {
 
     int old_width = this->width();
     int old_height = this->height();
+
+    if (old_width == new_width && old_height == new_height) {
+        return;
+    }
 
     int min_width = new_width >= old_width ? old_width : new_width;
     int min_height = new_height >= old_height ? old_height : new_height;
