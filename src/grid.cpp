@@ -60,8 +60,10 @@ int Grid::get_index(int x, int y) const {
     return x + y * size_x;
 }
 
-int Grid::get_status(int x, int y) const {
-    return cellv[x + y * size_x];
+int Grid::get_status(int index) const {
+    if (index < 0 || index > this->size())
+        return -1;
+    return cellv[index];
 }
 
 void Grid::set_alive(int x, int y) {
@@ -72,6 +74,16 @@ void Grid::set_alive(int x, int y) {
 void Grid::set_dead(int x, int y) {
     cellv[x + y * size_x] = 0;
     return;
+}
+
+int Grid::count_alive() {
+    int result = 0;
+    for (int i = 0; i < this->size(); ++i) {
+        if (this->cellv[i] == 1) {
+            ++result;
+        }
+    }
+    return result;
 }
 
 // update method implementation

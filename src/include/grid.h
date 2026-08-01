@@ -16,7 +16,7 @@ public:
     int origin_x() const;
     int origin_y() const;
 
-    int get_status(int x, int y) const;
+    int get_status(int index) const;
     int get_x(int index) const;
     int get_y(int index) const;
     int get_index(int x, int y) const;
@@ -24,6 +24,7 @@ public:
     void set_alive(int x, int y);
     void set_dead(int x, int y);
     
+    int count_alive();
     int count_neighbors(int index);
     void resize(int new_width, int new_height);
     void update();

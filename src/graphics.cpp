@@ -68,7 +68,7 @@ void DrawGrid(const Grid& gr) {
 
     // insides
     for (int i = 0; i < gr.size(); ++i) {
-        if (gr.get_status(gr.get_x(i), gr.get_y(i))) {
+        if (gr.get_status(i)) {
             DrawRectangle(  gr.origin_x() + gr.get_x(i) * cell_size,
                             gr.origin_y() + gr.get_y(i) * cell_size,
                             cell_size, cell_size, BLACK);  

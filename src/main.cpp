@@ -22,10 +22,15 @@ int main()
     Grid my_grid(100, 60, 100, 50);
 
     bool show_help = false;
+    bool show_debug = false;
+
     int sim_speed = 4;
     int resize_factor = 1;
     bool auto_sim = false;
     float time_counter = 0.0f;
+
+    bool speed_edit_mode = false;
+    bool resize_edit_mode = false;
 
     bool file_save_dialog = false;
     bool file_load_dialog = false;
@@ -43,7 +48,6 @@ int main()
         }
         int current_key = GetKeyPressed();
 
-        // int current_ind = GetGridIndexFromPoint(my_grid, GetMouseX() - 5, GetMouseY() - 5);
     if (!(file_save_dialog || file_load_dialog)) {
             switch (current_key) {
                 case KEY_R: // update once
@@ -142,12 +146,6 @@ int main()
         }
 
         // debug information
-        DrawRectangle(5, 5, GetRenderWidth() - 10, 30, WHITE);
-        DrawFPS(10, 10);
-        DrawText(TextFormat("X: %4d Y: %4d", GetMouseX() - 5, GetMouseY() - 5), 100, 10, 21, GREEN);
-        DrawText(TextFormat("speed: %2d", sim_speed), 290, 10, 21, DARKGREEN);
-        DrawText(TextFormat("cell #%4d neighbors: %d", current_ind, my_grid.count_neighbors(current_ind)), 420, 10, 21, DARKGREEN);
-        DrawText(TextFormat("size: %dx%d", my_grid.width(), my_grid.height()), 780, 10, 21, DARKGREEN);
         DrawPixel(GetMouseX() - 5, GetMouseY() - 5, RED);
         DrawPixel(GetMouseX() - 4, GetMouseY() - 5, RED);
         DrawPixel(GetMouseX() - 5, GetMouseY() - 4, RED);
@@ -155,46 +153,104 @@ int main()
         //
 
         // GUI hell
+        // horizontal bar
+
+        DrawRectangle(5, 5, GetRenderWidth() - 10, 40, WHITE);
+        float button_width = GetScreenWidth() / 24 > 48 ? GetScreenWidth() / 24 : 48;
+
+        // quit
+        if (GuiButton(Rectangle{10.0f, 10.0f, 30.0f, 30.0f}, "#159#")) {
+            EndDrawing();
+            break;
+        }
+
+        // GuiStatusBar(Rectangle{50.0f, 10.0f, 70.0f, 30.0f}, TextFormat("SPEED: %2d", sim_speed));
+
+        // maybe change to buttons that apply default values 
+        GuiStatusBar(Rectangle{50.0f, 10.0f, 90.0f, 30.0f}, TextFormat("SIZE: %dx%d", my_grid.width(), my_grid.height()));
+        GuiStatusBar(Rectangle{150.0f, 10.0f, 60.0f, 30.0f}, TextFormat("FPS: %d", GetFPS()));
+        GuiStatusBar(Rectangle{220.0f, 10.0f, button_width * 2.5f, 30.0f}, TextFormat("ALIVE: %d/%d", my_grid.count_alive(), my_grid.size()));
+
+        GuiToggle(Rectangle{230.0f + button_width * 2.5f, 10.0f, button_width * 1.5f, 30.0f}, "#140# DEBUG", &show_debug);
+
+        if (show_debug) {
+            GuiStatusBar(Rectangle{240.0f + button_width * 4.0f, 10.0f, button_width * 2.5f, 12.0f},
+                         TextFormat("X: %4d Y: %4d", GetMouseX(), GetMouseY()));
+
+            GuiStatusBar(Rectangle{240.0f + button_width * 4.0f, 28.0f, button_width * 2.5f, 12.0f},
+                         TextFormat("#%-5d {%-4d, %-4d}", current_ind, my_grid.get_x(current_ind), my_grid.get_y(current_ind)));
+
+            GuiStatusBar(Rectangle{250.0f + button_width * 6.5f, 10.0f, 50.0f, 12.0f}, TextFormat("#186# %1d", my_grid.get_status(current_ind)));
+            GuiStatusBar(Rectangle{250.0f + button_width * 6.5f, 28.0f, 50.0f, 12.0f}, TextFormat("#89# %1d", my_grid.count_neighbors(current_ind)));
+        }
+
+
+        // vertical bar
         DrawRectangle(5, 50, 80, GetRenderHeight() - 55, WHITE);
-        float button_height = GetRenderHeight() / 16 > 40 ? GetRenderHeight() / 16 : 40;
+        float button_height = GetRenderHeight() / 16 > 36 ? GetRenderHeight() / 16 : 36;
 
         GuiToggle(Rectangle{10.0f, 55.0f, 70.0f, button_height}, "SHOW\nHELP", &show_help);
 
         GuiToggle(Rectangle{10.0f, 55.0f + button_height * 1.3f, 70.0f, button_height}, "AUTO\nUPDATE", &auto_sim);
 
-        bool speed_edit_mode = false;
-        if (GuiSpinner(Rectangle{10.0f, 55.0f + button_height * 2.6f, 70.0f, button_height}, "", &sim_speed, 0, 10, speed_edit_mode)) {
-           speed_edit_mode = !speed_edit_mode; 
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 2.6f, 70.0f, button_height / 2}, "SIM SPEED")) {
+            sim_speed = 4;
+        }
+        if (GuiSpinner(Rectangle{10.0f, 55.0f + button_height * 3.2f, 70.0f, button_height / 2}, "", &sim_speed, 0, 10, speed_edit_mode)) {
+            speed_edit_mode = !speed_edit_mode; 
         }
 
-        bool resize_edit_mode = false;
-        if (GuiSpinner(Rectangle{10.0f, 55.0f + button_height * 3.9f, 70.0f, button_height}, "", &resize_factor, 1, 10, resize_edit_mode)) {
-           resize_edit_mode = !resize_edit_mode; 
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 4.0f, 70.0f, button_height / 2}, "RESIZE BY:")) {
+            resize_factor = 1;
+        }
+        if (GuiSpinner(Rectangle{10.0f, 55.0f + button_height * 4.6f, 70.0f, button_height / 2}, "", &resize_factor, 1, 10, resize_edit_mode)) {
+            resize_edit_mode = !resize_edit_mode; 
         }
 
-        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 5.2f, 70.0f, button_height}, "CLEAR")) {
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 5.4f, 70.0f, button_height}, "CLEAR")) {
             for (int i = 0; i < my_grid.size(); ++i) {
                 my_grid.set_dead(my_grid.get_x(i), my_grid.get_y(i));
             }
         }
 
-
-        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 6.5f, 70.0f, button_height}, "#6# SAVE")) {
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 6.7f, 70.0f, button_height}, "#6# SAVE")) {
             file_save_dialog = true;
         }
 
-        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 7.8f, 70.0f, button_height}, "#5# LOAD")) {
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 8.1f, 70.0f, button_height}, "#5# LOAD")) {
             file_load_dialog = true;
+        }
+
+        // resize controls
+        // up
+        if (GuiButton(Rectangle{30.0f, 55.0f + button_height * 9.4f, 30.0f, button_height / 2}, "#117#")) {
+            my_grid.resize(my_grid.width(), my_grid.height() - resize_factor);
+        }
+
+        // left
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 10.1f, 30.0f, button_height / 2}, "#114#")) {
+            my_grid.resize(my_grid.width() - resize_factor, my_grid.height());
+        }
+
+        // right
+        if (GuiButton(Rectangle{50.0f, 55.0f + button_height * 10.1f, 30.0f, button_height / 2}, "#115#")) {
+            my_grid.resize(my_grid.width() + resize_factor, my_grid.height());
+        }
+
+        // down
+        if (GuiButton(Rectangle{30.0f, 55.0f + button_height * 10.8f, 30.0f, button_height / 2}, "#116#")) {
+            my_grid.resize(my_grid.width(), my_grid.height() + resize_factor);
         }
 
         if (file_save_dialog) {
             GuiUnlock();
+            
             DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(RAYWHITE, 0.8f));
 
             int button_active = -1;
 
                 GuiTextInputBox(Rectangle{(float) GetScreenWidth() / 2 - 120, (float) GetScreenHeight() / 2 - 80.0f, 240, 160}, 
-                    "#6# SAVE FILE", "Introduce output file name:", text_input, 255, "Ok;Cancel", &button_active, nullptr);
+                    "#6# SAVE FILE", "Enter a filename:", text_input, 255, "Save;Cancel", &button_active, nullptr);
 
                 if (button_active == 1)
                 {
@@ -216,7 +272,7 @@ int main()
             int button_active = -1;
 
                 GuiTextInputBox(Rectangle{(float) GetScreenWidth() / 2 - 120, GetScreenHeight() / 2 - 80.0f, 240, 160}, 
-                    "#5# LOAD FILE", "Introduce input file name:", text_input, 255, "Ok;Cancel", &button_active, nullptr);
+                    "#5# LOAD FILE", "Enter a filename:", text_input, 255, "Load;Cancel", &button_active, nullptr);
 
                 if (button_active == 1)
                 {
