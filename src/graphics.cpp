@@ -3,8 +3,8 @@
 #include "graphics.h"
 
 int GetCellSize(const Grid& gr) {
-    int result_x = (GetRenderWidth() -  gr.origin_x() * 3 / 2 - 20) / gr.width();
-    int result_y = (GetRenderHeight() -  gr.origin_y() * 3 / 2 - 20) / gr.height();
+    int result_x = (GetRenderWidth() -  gr.origin_x() - 20) / gr.width();
+    int result_y = (GetRenderHeight() -  gr.origin_y() - 20) / gr.height();
 
     if (result_x < 1 || result_y < 1)
         return 1;
@@ -68,7 +68,7 @@ void DrawGrid(const Grid& gr) {
 
     // insides
     for (int i = 0; i < gr.size(); ++i) {
-        if (gr.get_status(gr.get_x(i), gr.get_y(i))) {
+        if (gr.get_status(i)) {
             DrawRectangle(  gr.origin_x() + gr.get_x(i) * cell_size,
                             gr.origin_y() + gr.get_y(i) * cell_size,
                             cell_size, cell_size, BLACK);  
@@ -108,7 +108,7 @@ void DrawHelpMenu(const Grid& gr) {
                         "U - Toggle auto-update\n\n"
                         ">/< - +/- Auto-update speed\n\n"
                         "Arrow keys - Resize the grid\n\n"
-                        "S/L - save/load grid (level.dat)"),
+                        "S/L - save/load grid"),
                         (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 25,
                         gr.origin_y() + font_sz * 3,
                         font_sz, BLACK);

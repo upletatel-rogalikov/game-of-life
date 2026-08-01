@@ -12,6 +12,8 @@ add_subdirectory(libs/raylib)
 add_executable(game_of_life src/main.cpp src/grid.cpp src/graphics.cpp)
 
 target_include_directories(game_of_life PRIVATE src/include)
+target_include_directories(game_of_life PRIVATE libs/) # raygui.h
+
 target_link_libraries(game_of_life PRIVATE raylib)
 
 # unused
