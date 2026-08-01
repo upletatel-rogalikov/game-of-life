@@ -108,7 +108,7 @@ void DrawHelpMenu(const Grid& gr) {
                         "U - Toggle auto-update\n\n"
                         ">/< - +/- Auto-update speed\n\n"
                         "Arrow keys - Resize the grid\n\n"
-                        "S/L - save/load grid (level.dat)"),
+                        "S/L - save/load grid"),
                         (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 25,
                         gr.origin_y() + font_sz * 3,
                         font_sz, BLACK);

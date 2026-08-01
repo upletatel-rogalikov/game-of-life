@@ -21,13 +21,18 @@ int main()
 
     Grid my_grid(100, 60, 100, 50);
 
+    int current_ind = 0; // index of the cell pointed by the mouse (-1 if outside the grid)
+    int current_key = 0; // current key pressed
+
+    int resize_factor = 1;
+
+    bool auto_sim = false;
+    int sim_speed = 4;
+    float time_counter = 0.0f;
+
+    // GUI control
     bool show_help = false;
     bool show_debug = false;
-
-    int sim_speed = 4;
-    int resize_factor = 1;
-    bool auto_sim = false;
-    float time_counter = 0.0f;
 
     bool speed_edit_mode = false;
     bool resize_edit_mode = false;
@@ -35,6 +40,7 @@ int main()
     bool file_save_dialog = false;
     bool file_load_dialog = false;
 
+    // filename input buffer
     char *text_input = new char[256]{0};
 
     while (!WindowShouldClose())
@@ -46,9 +52,35 @@ int main()
         if (file_save_dialog || file_load_dialog) {
             GuiLock();
         }
-        int current_key = GetKeyPressed();
 
-    if (!(file_save_dialog || file_load_dialog)) {
+        
+        if (auto_sim && !file_save_dialog) {
+            time_counter += GetFrameTime() * sim_speed * 6;
+            if (time_counter >= 1.0f) {
+                time_counter = 0.0f;
+                my_grid.update();
+            }
+        }
+
+        // mouse control
+        current_ind = GetGridIndexFromPoint(my_grid, GetMouseX(), GetMouseY());
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !(show_help || file_save_dialog || file_load_dialog)) {
+            if (current_ind >= 0) {
+                my_grid.set_alive(my_grid.get_x(current_ind), my_grid.get_y(current_ind));
+            }
+        }
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !(show_help || file_save_dialog || file_load_dialog)) {
+            if (current_ind >= 0) {
+                my_grid.set_dead(my_grid.get_x(current_ind), my_grid.get_y(current_ind));
+            }
+        }
+
+        // keyboard controls
+        current_key = GetKeyPressed();
+
+        if (!(file_save_dialog || file_load_dialog)) {
             switch (current_key) {
                 case KEY_R: // update once
                     if (!auto_sim) // do nothing if auto_sim is enabled
@@ -110,48 +142,6 @@ int main()
             }
         }
 
-        if (auto_sim && !file_save_dialog) {
-            if (sim_speed > 10) 
-                sim_speed = 10;
-
-            if (sim_speed < 0)
-                sim_speed = 0;
-
-            time_counter += GetFrameTime() * sim_speed * 6;
-            if (time_counter >= 1.0f) {
-                time_counter = 0.0f;
-                my_grid.update();
-            }
-        }
-
-        int current_ind = GetGridIndexFromPoint(my_grid, GetMouseX() - 5, GetMouseY() - 5);
-
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !(show_help || file_save_dialog || file_load_dialog)) {
-            if (current_ind >= 0) {
-                my_grid.set_alive(my_grid.get_x(current_ind), my_grid.get_y(current_ind));
-            }
-        }
-
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !(show_help || file_save_dialog || file_load_dialog)) {
-            if (current_ind >= 0) {
-                my_grid.set_dead(my_grid.get_x(current_ind), my_grid.get_y(current_ind));
-            }
-        }
-
-        DrawGrid(my_grid);
-        DrawCellSelection(my_grid, current_ind);
-
-        if (show_help) {
-            DrawHelpMenu(my_grid);
-        }
-
-        // debug information
-        DrawPixel(GetMouseX() - 5, GetMouseY() - 5, RED);
-        DrawPixel(GetMouseX() - 4, GetMouseY() - 5, RED);
-        DrawPixel(GetMouseX() - 5, GetMouseY() - 4, RED);
-        DrawPixel(GetMouseX() - 4, GetMouseY() - 4, RED);
-        //
-
         // GUI hell
         // horizontal bar
 
@@ -164,11 +154,12 @@ int main()
             break;
         }
 
-        // GuiStatusBar(Rectangle{50.0f, 10.0f, 70.0f, 30.0f}, TextFormat("SPEED: %2d", sim_speed));
+        if (GuiButton(Rectangle{50.0f, 10.0f, 90.0f, 30.0f}, TextFormat("SIZE: %dx%d", my_grid.width(), my_grid.height()))) {
+            my_grid.resize(100, 50); // resize to default width and height
+        }
 
-        // maybe change to buttons that apply default values 
-        GuiStatusBar(Rectangle{50.0f, 10.0f, 90.0f, 30.0f}, TextFormat("SIZE: %dx%d", my_grid.width(), my_grid.height()));
         GuiStatusBar(Rectangle{150.0f, 10.0f, 60.0f, 30.0f}, TextFormat("FPS: %d", GetFPS()));
+
         GuiStatusBar(Rectangle{220.0f, 10.0f, button_width * 2.5f, 30.0f}, TextFormat("ALIVE: %d/%d", my_grid.count_alive(), my_grid.size()));
 
         GuiToggle(Rectangle{230.0f + button_width * 2.5f, 10.0f, button_width * 1.5f, 30.0f}, "#140# DEBUG", &show_debug);
@@ -189,11 +180,20 @@ int main()
         DrawRectangle(5, 50, 80, GetRenderHeight() - 55, WHITE);
         float button_height = GetRenderHeight() / 16 > 36 ? GetRenderHeight() / 16 : 36;
 
-        GuiToggle(Rectangle{10.0f, 55.0f, 70.0f, button_height}, "SHOW\nHELP", &show_help);
+        GuiToggle(Rectangle{10.0f, 55.0f, 70.0f, button_height}, "#193#HELP", &show_help);
+        if (show_help) {
+            DrawHelpMenu(my_grid);
+        }
 
-        GuiToggle(Rectangle{10.0f, 55.0f + button_height * 1.3f, 70.0f, button_height}, "AUTO\nUPDATE", &auto_sim);
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 1.3f, 30.0f, button_height}, "#119#")) {
+            if (!auto_sim) {
+                my_grid.update();
+            }
+        }
 
-        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 2.6f, 70.0f, button_height / 2}, "SIM SPEED")) {
+        GuiToggle(Rectangle{50.0f, 55.0f + button_height * 1.3f, 30.0f, button_height}, "#77#", &auto_sim);
+
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 2.6f, 70.0f, button_height / 2}, "SPEED")) {
             sim_speed = 4;
         }
         if (GuiSpinner(Rectangle{10.0f, 55.0f + button_height * 3.2f, 70.0f, button_height / 2}, "", &sim_speed, 0, 10, speed_edit_mode)) {
@@ -286,6 +286,9 @@ int main()
                     file_load_dialog = false;
                 }
         }
+
+        DrawGrid(my_grid);
+        DrawCellSelection(my_grid, current_ind);
 
         EndDrawing();
     }
