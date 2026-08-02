@@ -66,17 +66,13 @@ void DrawGrid(const Grid& gr) {
                 Vector2{(float) gr.origin_x() + 5 + (gr.width() * cell_size), (float) gr.origin_y() + 10 + (gr.height() * cell_size)},
                 10.0f, GRAY);
 
+    DrawRectangle(gr.origin_x(), gr.origin_y(), gr.width() * cell_size, gr.height() * cell_size, WHITE);
     // insides
     for (int i = 0; i < gr.size(); ++i) {
         if (gr.get_status(i)) {
             DrawRectangle(  gr.origin_x() + gr.get_x(i) * cell_size,
                             gr.origin_y() + gr.get_y(i) * cell_size,
                             cell_size, cell_size, BLACK);  
-        }
-        else {
-            DrawRectangle(  gr.origin_x() + gr.get_x(i) * cell_size,
-                            gr.origin_y() + gr.get_y(i) * cell_size,
-                            cell_size, cell_size, WHITE);  
         }
     }
     return;
@@ -112,14 +108,5 @@ void DrawHelpMenu(const Grid& gr) {
                         (GetRenderWidth() - MeasureText("LMB - Populate the selected cell", font_sz)) / 2 - 25,
                         gr.origin_y() + font_sz * 3,
                         font_sz, BLACK);
-
-    // DrawText(TextFormat("\"LMB\" - Populate the selected cell"), 500, 440, font_sz, BLACK);
-    // DrawText(TextFormat("\"RMB\" - Clear the selected cell"), 500, 470, font_sz, BLACK);
-    // DrawText(TextFormat("\"R\" - Update the grid once"), 500, 500, font_sz, BLACK);
-    // DrawText(TextFormat("\"C\" - Clear the grid"), 500, 530, font_sz, BLACK);
-    // DrawText(TextFormat("\"U\" - Toggle auto-update"), 500, 560, font_sz, BLACK);
-    // DrawText(TextFormat("\",\"(comma)/\".\"(period) - +/- Auto-update speed"), 500, 590, font_sz, BLACK);
-    // DrawText(TextFormat("\"Arrow keys\" - Resize the grid"), 500, 620, font_sz, BLACK);
-
     return;
 }

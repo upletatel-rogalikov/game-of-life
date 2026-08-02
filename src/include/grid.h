@@ -13,6 +13,7 @@ public:
     int size() const;
     int width() const;
     int height() const;
+
     int origin_x() const;
     int origin_y() const;
 

@@ -16,8 +16,6 @@ Grid::Grid(int or_x, int or_y, int s_x, int s_y) :orgn_x{or_x}, orgn_y{or_y}, si
     tempv = cellv;
 }
 
-// remove unused
-
 int Grid::size() const {
     return size_x * size_y;
 }
@@ -61,8 +59,9 @@ int Grid::get_index(int x, int y) const {
 }
 
 int Grid::get_status(int index) const {
-    if (index < 0 || index > this->size())
+    if (index < 0 || index > this->size()) {
         return -1;
+    }
     return cellv[index];
 }
 
@@ -79,14 +78,13 @@ void Grid::set_dead(int x, int y) {
 int Grid::count_alive() {
     int result = 0;
     for (int i = 0; i < this->size(); ++i) {
-        if (this->cellv[i] == 1) {
+        if (cellv[i] == 1) {
             ++result;
         }
     }
     return result;
 }
 
-// update method implementation
 int Grid::count_neighbors(int index) {
     int result = 0;
 
@@ -103,7 +101,7 @@ int Grid::count_neighbors(int index) {
             }
 
             if (cellv[get_index(x, y)] == 1) {
-                result++;
+                ++result;
             }
         }
     }
@@ -130,8 +128,21 @@ void Grid::update() {
             tempv[i] = 0;
        }
     }
-    cellv = tempv;
-    tempv = std::vector<int>(this->size(), 0);
+
+    // measure performance on these operations
+    // cellv = tempv;
+
+    // probably avoids copy
+    for (int i = 0; i < this->size(); ++i) {
+        cellv[i] = tempv[i];
+    }
+
+    //tempv = std::vector<int>(this->size(), 0);
+
+    // avoids constructing a new vector
+    for (auto& x : tempv) {
+       x = 0; 
+    }
     return;
 }
 
@@ -160,6 +171,7 @@ void Grid::resize(int new_width, int new_height) {
 
     size_x = new_width;
     size_y = new_height;
+
     cellv = std::move(new_cellv);
     tempv = std::vector<int>(new_width * new_height, 0);
     return;
@@ -172,23 +184,15 @@ void Grid::save(std::string filename) {
     out_file.write(reinterpret_cast<char*>(&orgn_y), sizeof orgn_y);
     out_file.write(reinterpret_cast<char*>(&size_x), sizeof size_x);
     out_file.write(reinterpret_cast<char*>(&size_y), sizeof size_y);
-    // out_file << this->orgn_x;
-    // out_file << this->orgn_y;
-    // out_file << this->size_x;
-    // out_file << this->size_y;
 
-    std::cout << "saving 1 step complete\n";
-    std::cout << "origin_x: " << this->orgn_x << "\n";
-    std::cout << "origin_y: " << this->orgn_y << "\n";
-    std::cout << "size_x: " << this->size_x << "\n";
-    std::cout << "size_y: " << this->size_y << "\n";
+    // std::cout << "origin_x: " << this->orgn_x << "\n";
+    // std::cout << "origin_y: " << this->orgn_y << "\n";
+    // std::cout << "size_x: " << this->size_x << "\n";
+    // std::cout << "size_y: " << this->size_y << "\n";
 
-    for (int i = 0; i < this->cellv.size(); ++i) {
+    for (int i = 0; i < cellv.size(); ++i) {
         out_file.write(reinterpret_cast<char*>(&cellv[i]), sizeof cellv[i]);
-        // out_file << this->cellv[i];
     }
-    std::cout << "saving complete\n";
-
     return;
 }
 
@@ -199,26 +203,17 @@ void Grid::load(std::string filename) {
     in_file.read(reinterpret_cast<char*>(&orgn_y), sizeof orgn_y);
     in_file.read(reinterpret_cast<char*>(&size_x), sizeof size_x);
     in_file.read(reinterpret_cast<char*>(&size_y), sizeof size_y);
-    // in_file >> this->orgn_x;
-    // in_file >> this->orgn_y;
-    // in_file >> this->size_x;
-    // in_file >> this->size_y;
 
-    std::cout << "loading 1 step complete\n";
-    std::cout << "origin_x: " << this->orgn_x << "\n";
-    std::cout << "origin_y: " << this->orgn_y << "\n";
-    std::cout << "size_x: " << this->size_x << "\n";
-    std::cout << "size_y: " << this->size_y << "\n";
+    // std::cout << "origin_x: " << this->orgn_x << "\n";
+    // std::cout << "origin_y: " << this->orgn_y << "\n";
+    // std::cout << "size_x: " << this->size_x << "\n";
+    // std::cout << "size_y: " << this->size_y << "\n";
 
-    this->cellv = std::vector<int>(size_x * size_y, 0);
-    this->tempv = cellv;
+    cellv = std::vector<int>(size_x * size_y, 0);
+    tempv = cellv;
 
-
-    for (int i = 0; i < this->cellv.size(); ++i) {
+    for (int i = 0; i < cellv.size(); ++i) {
         in_file.read(reinterpret_cast<char*>(&cellv[i]), sizeof cellv[i]);
-        // in_file >> this->cellv[i];
     }
-    std::cout << "loading complete\n";
-
     return;
 }

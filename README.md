@@ -1,13 +1,13 @@
 # Game of Life
 
-A simple recreation of Conway's Game of Life, created with [raylib](https://github.com/raysan5/raylib)
+A simple recreation of Conway's Game of Life, created with [raylib](https://github.com/raysan5/raylib) & [raygui](https://github.com/raysan5/raygui)
 
 ## Building
 
 ### Prerequisites
 
 >* **C\+\+23 compiler** (required C\+\+ standard can be modified in `CMakeLists.txt`, but older standards have not been tested)
->* **CMake 4.3 or newer** (required CMake version can be modified in `CMakeLists.txt`, but older version have not been tested)
+>* **CMake 4.3 or newer** (required CMake version can be modified in `CMakeLists.txt`, but older versions have not been tested)
 >* **Ninja** (or any other build system supported by CMake)
 
 * ### Windows

@@ -9,11 +9,18 @@
 #include "grid.h"
 #include "graphics.h"
 
+void CustomTraceLog(int msgType, const char *text, va_list args) // disable logging
+{
+	return;
+}
+
 constexpr int SCREEN_WIDTH  = 1280;
 constexpr int SCREEN_HEIGHT = 720;
 
 int main()
 {
+	SetTraceLogCallback(CustomTraceLog); // disable logging
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Game of Life");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowMinSize(640, 480);
@@ -143,8 +150,8 @@ int main()
         }
 
         // GUI hell
-        // horizontal bar
 
+        // horizontal bar
         DrawRectangle(5, 5, GetRenderWidth() - 10, 40, WHITE);
         float button_width = GetScreenWidth() / 24 > 48 ? GetScreenWidth() / 24 : 48;
 
@@ -204,7 +211,7 @@ int main()
             resize_edit_mode = !resize_edit_mode; 
         }
 
-        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 5.4f, 70.0f, button_height}, "CLEAR")) {
+        if (GuiButton(Rectangle{10.0f, 55.0f + button_height * 5.4f, 70.0f, button_height}, "#28#CLEAR")) {
             for (int i = 0; i < my_grid.size(); ++i) {
                 my_grid.set_dead(my_grid.get_x(i), my_grid.get_y(i));
             }
